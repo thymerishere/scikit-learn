@@ -85,6 +85,27 @@ class DataConversionWarning(UserWarning):
           implementation's data-type expectations;
         - passes an input whose shape can be interpreted ambiguously.
 
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from sklearn.metrics import pairwise_distances
+    >>> from sklearn.metrics.pairwise import pairwise_kernels
+    >>> from sklearn.exceptions import DataConversionWarning
+    >>> import warnings
+    >>> warnings.simplefilter('always', DataConversionWarning)
+    >>> X = np.array([[True, False], [True, True], [True, False]])
+    >>> Y = np.array([[1, 0], [True, False]])
+    >>> with warnings.catch_warnings(record=True) as w:
+    ...     try:
+    ...         pairwise_distances(X, Y, metric='jaccard')
+    ...     except ValueError:
+    ...        pass
+    ...     print(repr(w[-1].message))
+    array([[0. , 0. ],
+        [0.5, 0.5],
+        [0. , 0. ]])
+    DataConversionWarning('Data was converted to boolean for metric jaccard')
+
     .. versionchanged:: 0.18
        Moved from sklearn.utils.validation.
     """
@@ -170,6 +191,8 @@ class SkipTestWarning(UserWarning):
 
 class UndefinedMetricWarning(UserWarning):
     """Warning used when the metric is invalid
+
+    
 
     .. versionchanged:: 0.18
        Moved from sklearn.base.
